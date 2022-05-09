@@ -61,6 +61,7 @@ type AddGoodsFromFileSet struct {
 
 type Setting struct {
 	AuthToken               string                  `yaml:"authToken"`
+	DeviceId                string                  `yaml:"deviceId"`
 	RunMode                 int                     `yaml:"runMode"`
 	SupplySet               SupplySet               `yaml:"supplySet"`
 	BruteCapacity           bool                    `yaml:"bruteCapacity"`

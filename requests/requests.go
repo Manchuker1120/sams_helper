@@ -39,9 +39,9 @@ func (request *Request) InitRequest(setting conf.Setting) error {
 
 	request.Headers = &http.Header{
 		"Host":            []string{"api-sams.walmartmobile.cn"},
-		"content-Type":    []string{"application/json"},
-		"accept":          []string{"*/*"},
-		"auth-token":      []string{setting.AuthToken},
+		"Content-Type":    []string{"application/json"},
+		"Accept":          []string{"*/*"},
+		"Auth-Token":      []string{setting.AuthToken},
 		"Accept-Language": []string{"zh-Hans-CN;q=1, en-CN;q=0.9, ga-IE;q=0.8"},
 	}
 
@@ -53,6 +53,11 @@ func (request *Request) InitRequest(setting conf.Setting) error {
 		request.Headers.Set("device-type", "ios")
 		request.Headers.Set("user-agent", "SamClub/5.0.47 (iPhone; iOS 15.4.1; Scale/3.00)SamClub/5.0.47 (iPhone; iOS 15.4.1; Scale/3.00)")
 	}
+
+	if len(setting.DeviceId) > 30 {
+		request.Headers.Set("device-id", setting.DeviceId)
+	}
+
 	return nil
 }
 
@@ -92,13 +97,15 @@ func (request *Request) do(req *http.Request) (error, gjson.Result) {
 		case "CLOSE_ORDER_TIME_EXCEPTION":
 			return conf.CloseOrderTimeExceptionErr, gjson.Result{}
 		case "DECREASE_CAPACITY_COUNT_ERROR":
-			return conf.DecreaseCapacityCountError, gjson.Result{}
+			return conf.DecreaseCapacityCountErr, gjson.Result{}
+		case "GOODS_EXCEED_LIMIT":
+			return conf.GoodsExceedLimitErr, gjson.Result{}
 		case "OUT_OF_STOCK":
 			return conf.OutOfSellErr, gjson.Result{}
 		case "NOT_DELIVERY_CAPACITY_ERROR":
 			return conf.NotDeliverCapCityErr, gjson.Result{}
 		case "STORE_HAS_CLOSED":
-			return conf.StoreHasClosedError, gjson.Result{}
+			return conf.StoreHasClosedErr, gjson.Result{}
 		case "NO_MATCH_DELIVERY_MODE":
 			return conf.NoMatchDeliverMode, gjson.Result{}
 		case "FAIL":
